@@ -1,0 +1,56 @@
+/**
+ * Created by Haolin on 2017/6/10.
+ */
+let state = {
+  newMsg:"1",
+  message:[
+    {
+      case:"article",
+      user:"王路",
+      column:"王路的粽子铺",
+      title:"王璐：对高考和人生的看法",
+      new:"true"
+    },
+    {
+      case:"answer",
+      user:"叶修",
+      title:"为了结果正义，是否可以放弃程序正义？"
+    }
+  ],
+  attention:[
+    {
+      user:"尤雨溪"
+    }
+  ],
+  agree:[
+    {
+      case:"agree",
+      user:"某人",
+      title:"某某话题",
+      author:"某作者",
+      type:"answer"
+    },
+    {
+      case:"agree",
+      user:"某人",
+      title:"某某话题",
+      author:"某作者",
+      type:"comment"
+    },
+    {
+      case:"thanks",
+      user:"某人",
+      title:"某某话题",
+      author:"某作者",
+      type:"answer"
+    },
+    {
+      case:"thanks",
+      user:"某人",
+      title:"某某话题",
+      author:"某作者",
+      type:"answer"
+    }
+  ]
+};
+export default {state};
