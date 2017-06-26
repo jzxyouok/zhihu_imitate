@@ -138,6 +138,8 @@
   #userSummary{
     visibility: hidden;
     position: absolute;
+    top: 0;
+    left:0;
     width: 382px;
     line-height: 1.7;
     padding: 12px;

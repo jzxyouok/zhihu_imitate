@@ -1,7 +1,7 @@
 <template>
   <div id="infoCard">
     <div id="latestNews_title">
-      <i class="icon_list"></i><span class="ln_title_text">最新动态</span><span class="ln_title_setting"><i class="icon_setting"></i>设置</span>
+      <i class="icon_list"></i><span class="ln_title_text">最新动态</span><span class="ln_title_setting"><a href=""><i class="icon_setting"></i>设置</a></span>
     </div>
     <div id="latestNews_list">
       <div class="ln_item_wrapper" v-for="item in latestNews">
@@ -34,7 +34,7 @@
   #latestNews_title{
     height: 23px;
     line-height: 23px;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
     font-size: 14px;
     color: #666;
     font-weight: 700;
@@ -55,7 +55,12 @@
     font-size: 13px;
     color: #999;
     font-weight: 400;
-
+    >a{
+      color: #999;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
   }
   .icon_setting{
     display: inline-block;

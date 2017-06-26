@@ -14,12 +14,14 @@ let state = {
     {
       case:"answer",
       user:"叶修",
-      title:"为了结果正义，是否可以放弃程序正义？"
+      title:"为了结果正义，是否可以放弃程序正义？",
+      new:"false"
     }
   ],
   attention:[
     {
-      user:"尤雨溪"
+      user:"尤雨溪",
+      new:"false"
     }
   ],
   agree:[
@@ -28,28 +30,32 @@ let state = {
       user:"某人",
       title:"某某话题",
       author:"某作者",
-      type:"answer"
+      type:"answer",
+      new:"false"
     },
     {
       case:"agree",
       user:"某人",
       title:"某某话题",
       author:"某作者",
-      type:"comment"
+      type:"comment",
+      new:"false"
     },
     {
       case:"thanks",
       user:"某人",
       title:"某某话题",
       author:"某作者",
-      type:"answer"
+      type:"answer",
+      new:"false"
     },
     {
       case:"thanks",
       user:"某人",
       title:"某某话题",
       author:"某作者",
-      type:"answer"
+      type:"answer",
+      new:"false"
     }
   ]
 };

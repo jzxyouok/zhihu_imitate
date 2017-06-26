@@ -9,10 +9,10 @@
         <h2><a href="/#/">{{news.title}}</a></h2>
       </div>
 
-      <div  v-on:click="readAll" class="ln_btn_one">
+      <div v-if="toggle_summary" v-on:click="readAll" class="ln_btn_one">
         <a href="/#/" class="ln_voteup_btn">{{news.voteups}}</a>
       </div>
-      <div class="ln_btn_two">
+      <div v-if="toggle_main" class="ln_btn_two">
         <button @click="voteUp" :pressed="isPressedUp" class="ln_vote_up" :class="{vote_act:btnVoteUp}">
           <i class="icon_vote_up"></i>
           <span class="">{{news.voteups}}</span>
@@ -25,18 +25,18 @@
       </div>
 
       <div class="ln_authorInfo">
-        <span class="ln_authorInfo_n"><a href="/#/" @mouseover="hoverCard" @mouseout="leaveCard"  :hovercard="news.author_account">{{news.author}}</a><span class="icon_badge"></span></span>
-        <span class="ln_authorInfo_b">{{news.badge}}</span>
+        <span class="ln_authorInfo_n"><a href="/#/" @mouseover="hoverCard" @mouseout="leaveCard"  :hovercard="news.author_account">{{news.author}}</a><span v-if="news.badge!==''" class="icon_badge"></span></span>
+        <span class="ln_authorInfo_b" v-if="news.badge!==''">{{news.badge}}</span>
         <span class="ln_authorInfo_p">{{news.profile}}</span>
       </div>
 
-      <div v-on:click="readAll" class="ln_content clearfix">
-        <img :src="news.summary.img.src" :data-rawwidth="news.summary.img.width" :data-rawheight="news.summary.img.height"  class="ln_summary_img" :data-original="news.summary.img.original">
-        {{news.summary.content}}
+      <div v-if="toggle_summary" v-on:click="readAll" class="ln_content clearfix">
+        <img v-if="news.summary.img.src!==''" :src="news.summary.img.src" :data-rawwidth="news.summary.img.width" :data-rawheight="news.summary.img.height"  class="ln_summary_img" :data-original="news.summary.img.original">
+        <div v-html="news.summary.content" class="ln_content_summary"></div>
         <a v-on:click.prevent="readAll" :href="news.summary.href" class="toggle-expand">显示全部</a>
       </div>
 
-      <div class="ln_body_wrapper">
+      <div v-if="toggle_main" class="ln_body_wrapper">
         <div class="ln_votedUp">
           <a href="">{{news.voteups}}人赞同</a>
         </div>
@@ -52,7 +52,7 @@
         <a href="" v-if="isQuestion" class="fix_ln_mg" :class="btnClass"><span class="icon_point">没有帮助</span></a>
         <a href="" class="fix_ln_mg" :class="btnClass"><span class="icon_point">举报</span></a>
         <a :href="purviewHref" class="fix_ln_mg"><span class="icon_point">{{purviewText}}</span></a>
-        <button v-on:click="hideAll" class="ln_btn_hide"><i class="icon_btn_hide"></i>收起</button>
+        <button v-show="toggle_main" v-on:click="hideAll" class="ln_btn_hide"><i class="icon_btn_hide"></i>收起</button>
       </div>
 
       <commentsList :id="news.id"></commentsList>
@@ -73,6 +73,8 @@
       return {
         btnVoteUp:false,
         btnVoteDown:false,
+        toggle_summary:true,
+        toggle_main:false,
         allFooterBtn:false,
         footerToggle:false,
         comment:"",
@@ -98,23 +100,16 @@
         bus.$emit("leaveCard",event);
       },
       readAll(){
-        let block = this.$el;
-        this.$data.footerToggle=true;
-        $qs(".ln_content",block).style.display = "none";
-        $qs(".ln_btn_one",block).style.display = "none";
-        $qs(".ln_body_wrapper",block).style.display = "block";
-        $qs(".ln_btn_two",block).style.display = "block";
-        $qs(".ln_btn_hide",block).style.display = "block";
+        this.$data.toggle_summary = false;
+        this.$data.toggle_main = true;
+        this.$data.footerToggle = true;
       },
       hideAll(){
-        let block = this.$el;
-        this.$data.footerToggle=false;
-        $qs(".ln_content",block).style.display = "block";
-        $qs(".ln_btn_one",block).style.display = "block";
-        $qs(".ln_body_wrapper",block).style.display = "none";
-        $qs(".ln_btn_two",block).style.display = "none";
-        $qs(".ln_btn_hide",block).style.display = "none";
+        this.$data.toggle_main = false;
+        this.$data.toggle_summary = true;
+        this.$data.footerToggle = false;
       },
+
       voteUp(){
         let up = $qs(".ln_vote_up",this.$el);
         if(up.getAttribute("pressed")==="true"){
@@ -165,6 +160,15 @@
         switch (this.$props.news.source_type){
           case "member_answer_question":
             result = "回答了问题";
+            break;
+          case "member_agree_question":
+            result = "赞同了回答";
+            break;
+          case "member_publish_article":
+            result = "发布了文章";
+            break;
+          case "member_agree_article":
+            result = "赞了 "+this.$props.news.column+" 中的文章";
             break;
           default:
             console.log("缺少此消息类型");
@@ -330,7 +334,6 @@
 </script>
 <style lang="less">
   .ln_btn_hide{
-    display: none;
     float: right;
     line-height: 23px;
     font-size: 13px;
@@ -355,9 +358,6 @@
     background-position: -135px -22px;
   }
 
-  .ln_body_wrapper{
-    display: none;
-  }
   .ln_aside{
     float: left;
     margin-top: 3px;
@@ -414,19 +414,22 @@
           text-decoration: underline;
         }
       }
+      &:after{
+        content: '，';
+        font-weight: normal;
+        color: #222;
+      }
     }
     .ln_authorInfo_b{
       color: #222222;
-      &:before{
-        content: '，';
-        color: #222;
+      &:after{
+        content: ' • ';
+        color: #999999;
       }
     }
     .ln_authorInfo_p{
       color: #999999;
-      &:before{
-        content: ' • ';
-      }
+
     }
   }
   .ln_content{
@@ -434,6 +437,9 @@
     -webkit-tap-highlight-color: rgba(225,225,225,.5);
     position: relative;
     cursor: pointer;
+  }
+  .ln_content_summary{
+    display: inline;
   }
   .ln_summary_img{
     float: left;
@@ -452,10 +458,48 @@
     border-radius: 2px;
     color: #225599;
   }
+
+  .icon-external {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    vertical-align: 0;
+    .ic_bg;
+    background-position: 0 -204px;
+  }
   .ln_body{
     line-height: 22px;
     -webkit-tap-highlight-color: rgba(225,225,225,.5);
     position: relative;
+    a{
+      color: #259;
+      &.external {
+        margin: 0 4px 0 0;
+        word-break: break-all;
+      }
+      &:hover{
+        text-decoration: underline;
+      }
+      >.invisible {
+        font: 0/0 a;
+        color: transparent;
+        text-shadow: none;
+        background-color: transparent;
+        border: 0;
+      }
+      >.ellipsis{
+        word-wrap: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:after{
+          content: "...";
+        }
+      }
+      &.external>.icon-external {
+        margin-left: 4px;
+      }
+    }
     p{
       margin: 12px 0;
       &:first-child{

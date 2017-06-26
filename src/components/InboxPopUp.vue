@@ -8,7 +8,7 @@
     </div>
     <div class="mainPopUp">
 
-      <div id="messageList" v-if="displayNow==='message'" :class="">
+      <div id="messageList" v-if="displayNow==='message'">
         <div class="ipu_row" v-for="item in inboxData.message">
           <a href="/#/">{{item.user}}</a>在<a href="/#/">{{item.column}}</a>中发布了<a href="/#/">{{item.title}}</a>
         </div>
@@ -51,13 +51,9 @@
     data(){
         return {
           toggle:false,
-          displayNow:"message"
+          displayNow:"message",
+          newMsg:{}
         }
-    },
-    watch:{
-      displayNow:function(val){
-
-      }
     },
     methods:{
       switchList(event){
@@ -68,6 +64,7 @@
         if(et.id !== this.$data.displayNow){
           this.$data.displayNow = et.id;
         }
+        console.log(this.$data.displayNow);
       }
     },
     computed:{
@@ -80,6 +77,10 @@
       agreeClass(){
         return this.$data.displayNow==="agree"?"inbox_act":"";
       },
+      isNew(arg){//WTF
+        console.log(arg);
+        return arg===true?"ipu_new":"abc";
+      }
     },
     mounted(){
       bus.$on('inboxPopUp',()=>{
@@ -87,7 +88,6 @@
       });
     }
   };
-
 </script>
 <style lang="less">
   @border-in:solid 1px #eeeeee;
@@ -106,18 +106,21 @@
       }
     }
   }
+  .ipu_new{
+    background-color: #eff6fa;
+  }
 
 
   .mainPopUp{
     height: 300px;
-    padding: 0 2px;
+    padding: 0 0 0 4px;
     #messageList,#attentionList,#agreeList{
       font-size: 13px;
       line-height: 1.7;
       height: 100%;
       overflow-y: scroll;
       &::-webkit-scrollbar{
-        width: 6px;
+        width: 4px;
         background-color: transparent;
       }
       &::-webkit-scrollbar-thumb{
