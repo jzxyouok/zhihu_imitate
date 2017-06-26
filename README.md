@@ -1,6 +1,7 @@
 # zhihu_imitate
 
-> A personal practice project.Imitating zhihu.com
+> A personal practice project.Imitating first page of zhihu.com.
+> It builded by vue-cli.
 
 ## Build Setup
 
